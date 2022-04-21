@@ -132,7 +132,42 @@
 </template>
 
 <script>
+// import axios from "axios";
+import { inject, onMounted, ref } from "vue";
+import API from "../lib/API";
+
 export default {
   name: "WeatherMain",
+  setup() {
+    const locationName = ref(null);
+    // http://maps.googleapis.com/maps/api/geocode/json?latlng=44.4647452,7.3553838&sensor=true
+    const latitude = inject("latitude", null);
+    const longitude = inject("longitude", null);
+    console.log(latitude,longitude);
+    // const getLocationAddress = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude.value},${longitude.value}&key=AIzaSyA8QY-6_5cMdyochLiDP1m6NyHorH-jvfw`
+    //     );
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // };
+    const getWeatherDetails=async()=>{
+        try{
+            const response=await API.get(`https://api.ambeedata.com/weather/history/by-lat-lng?lat=12.9889055&lng=77.574044&from=2020-07-13%2012%3A16%3A44&to=2020-07-14%2012%3A16%3A44`)
+            console.log(JSON.stringify(response.data));
+        }catch(e){
+            console.log(e);
+        }
+    }
+    onMounted(()=>{
+        // getLocationAddress();
+        getWeatherDetails();
+    })
+    return {
+      locationName,
+    };
+  },
 };
 </script>
